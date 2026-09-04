@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Commons
 import qs.Ui
+import "I18n.js" as I18n
 
 Panel {
   id: root
@@ -17,6 +18,7 @@ Panel {
   property string processError: ""
   property var processRows: []
 
+  readonly property string localeName: Qt.locale().name
   readonly property var barIdentity: hostWidget || root
   readonly property int processRosterSize: {
     var value = Number(setting("processCount", 5))
@@ -61,7 +63,7 @@ Panel {
     } catch (error) {
       if (!processHasSnapshot) {
         processRows = []
-        processError = "Could not read network traffic"
+        processError = I18n.translate(localeName, "readError")
         processHasSnapshot = true
       }
       processLoading = false
@@ -130,6 +132,12 @@ Panel {
     var processIcon = Quickshell.iconPath(String(processName || ""), true)
     if (processIcon) return processIcon
     return Quickshell.iconPath("application-x-executable", true)
+  }
+
+  function displayProcessName(processName) {
+    return String(processName || "") === "Other traffic"
+      ? I18n.translate(localeName, "otherTraffic")
+      : String(processName || "")
   }
 
   function processRowKey(row) {
@@ -263,7 +271,7 @@ Panel {
           Text {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            text: "Network activity by process"
+            text: I18n.translate(root.localeName, "title")
             color: root.barForeground
             font.family: root.bar ? root.bar.fontFamily : Style.font.family
             font.pixelSize: Style.font.title
@@ -295,7 +303,7 @@ Panel {
           Text {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            text: "PROCESS"
+            text: I18n.translate(root.localeName, "process")
             color: Qt.darker(root.barForeground, 1.5)
             font.family: root.bar ? root.bar.fontFamily : Style.font.family
             font.pixelSize: Style.font.caption
@@ -307,7 +315,7 @@ Panel {
             anchors.right: uploadHeader.left
             anchors.verticalCenter: parent.verticalCenter
             width: Style.space(96)
-            text: "↓ DOWNLOAD"
+            text: "↓ " + I18n.translate(root.localeName, "download")
             color: Qt.darker(root.barForeground, 1.5)
             font.family: root.bar ? root.bar.fontFamily : Style.font.family
             font.pixelSize: Style.font.caption
@@ -320,7 +328,7 @@ Panel {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
             width: Style.space(96)
-            text: "↑ UPLOAD"
+            text: "↑ " + I18n.translate(root.localeName, "upload")
             color: Qt.darker(root.barForeground, 1.5)
             font.family: root.bar ? root.bar.fontFamily : Style.font.family
             font.pixelSize: Style.font.caption
@@ -342,7 +350,9 @@ Panel {
           height: Style.space(52)
           text: root.processError !== ""
             ? root.processError
-            : (root.processLoading ? "Measuring network traffic…" : "No active network traffic")
+            : (root.processLoading
+              ? I18n.translate(root.localeName, "measuring")
+              : I18n.translate(root.localeName, "noActivity"))
           color: Qt.darker(root.barForeground, 1.35)
           font.family: root.bar ? root.bar.fontFamily : Style.font.family
           font.pixelSize: Style.font.body
@@ -392,8 +402,8 @@ Panel {
               anchors.rightMargin: Style.space(12)
               anchors.verticalCenter: parent.verticalCenter
               text: Number(modelData.pid) > 0
-                ? modelData.name + "  ·  " + modelData.pid
-                : modelData.name
+                ? root.displayProcessName(modelData.name) + "  ·  " + modelData.pid
+                : root.displayProcessName(modelData.name)
               color: root.barForeground
               font.family: root.bar ? root.bar.fontFamily : Style.font.family
               font.pixelSize: Style.font.body
@@ -437,7 +447,7 @@ Panel {
 
         Text {
           width: parent.width
-          text: "Recent " + root.processRosterSize + " processes + unassigned traffic · R to refresh"
+          text: I18n.translate(root.localeName, "footer", { count: root.processRosterSize })
           color: Qt.darker(root.barForeground, 1.5)
           font.family: root.bar ? root.bar.fontFamily : Style.font.family
           font.pixelSize: Style.font.caption
@@ -458,7 +468,7 @@ Panel {
     onExited: function(exitCode) {
       if (exitCode !== 0 && !root.processHasSnapshot) {
         root.processRows = []
-        root.processError = "Could not read network traffic"
+        root.processError = I18n.translate(root.localeName, "readError")
         root.processHasSnapshot = true
       }
       root.processLoading = false
