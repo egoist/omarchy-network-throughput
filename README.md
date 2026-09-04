@@ -12,6 +12,7 @@ A compact Omarchy Quattro bar widget that stacks upload above download and opens
 - An **Other traffic** row for UDP/HTTP3, proxy/TUN, system-owned, short-lived, and protocol-overhead traffic
 - Optimistic background refreshes that keep the last snapshot visible
 - Theme-aware native Quattro panel and application icons
+- Automatic Simplified Chinese UI when the Omarchy session locale is `zh_CN`, `zh_SG`, or `zh_Hans`
 
 ## Install
 

@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Commons
 import qs.Ui
+import "I18n.js" as I18n
 
 BarWidget {
   id: root
@@ -11,6 +12,7 @@ BarWidget {
   property string downloadText: "--"
   property string uploadText: "--"
 
+  readonly property string localeName: Qt.locale().name
   readonly property real configuredWidth: {
     var value = Number(setting("width", 68))
     return isFinite(value) && value > 0 ? Math.max(48, Math.min(180, value)) : 68
@@ -94,7 +96,7 @@ BarWidget {
     verticalPadding: 0
     labelVisible: false
     hasVisualContent: true
-    tooltipText: "Show network activity by process"
+    tooltipText: I18n.translate(root.localeName, "tooltip")
 
     onPressed: function(mouseButton) {
       if (mouseButton === Qt.LeftButton) root.toggle()
