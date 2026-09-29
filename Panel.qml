@@ -18,6 +18,10 @@ Panel {
   property var processRows: []
 
   readonly property var barIdentity: hostWidget || root
+  // Text on the popup takes the popup's own text colour. barForeground is
+  // tuned for the bar, and can be dark when the popup behind the text is
+  // dark too (a transparent bar over a light wallpaper).
+  readonly property color panelForeground: Color.popups.text
   readonly property int processRosterSize: {
     var value = Number(setting("processCount", 5))
     return isFinite(value) ? Math.max(1, Math.min(10, Math.round(value))) : 5
@@ -264,7 +268,7 @@ Panel {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
             text: "Network activity by process"
-            color: root.barForeground
+            color: root.panelForeground
             font.family: root.bar ? root.bar.fontFamily : Style.font.family
             font.pixelSize: Style.font.title
             font.bold: true
@@ -296,7 +300,7 @@ Panel {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
             text: "PROCESS"
-            color: Qt.darker(root.barForeground, 1.5)
+            color: Qt.darker(root.panelForeground, 1.5)
             font.family: root.bar ? root.bar.fontFamily : Style.font.family
             font.pixelSize: Style.font.caption
             font.bold: true
@@ -308,7 +312,7 @@ Panel {
             anchors.verticalCenter: parent.verticalCenter
             width: Style.space(96)
             text: "↓ DOWNLOAD"
-            color: Qt.darker(root.barForeground, 1.5)
+            color: Qt.darker(root.panelForeground, 1.5)
             font.family: root.bar ? root.bar.fontFamily : Style.font.family
             font.pixelSize: Style.font.caption
             font.bold: true
@@ -321,7 +325,7 @@ Panel {
             anchors.verticalCenter: parent.verticalCenter
             width: Style.space(96)
             text: "↑ UPLOAD"
-            color: Qt.darker(root.barForeground, 1.5)
+            color: Qt.darker(root.panelForeground, 1.5)
             font.family: root.bar ? root.bar.fontFamily : Style.font.family
             font.pixelSize: Style.font.caption
             font.bold: true
@@ -332,7 +336,7 @@ Panel {
         Rectangle {
           width: parent.width
           height: Math.max(1, Style.space(1))
-          color: root.barForeground
+          color: root.panelForeground
           opacity: 0.16
         }
 
@@ -343,7 +347,7 @@ Panel {
           text: root.processError !== ""
             ? root.processError
             : (root.processLoading ? "Measuring network traffic…" : "No active network traffic")
-          color: Qt.darker(root.barForeground, 1.35)
+          color: Qt.darker(root.panelForeground, 1.35)
           font.family: root.bar ? root.bar.fontFamily : Style.font.family
           font.pixelSize: Style.font.body
           horizontalAlignment: Text.AlignHCenter
@@ -379,7 +383,7 @@ Panel {
                 anchors.centerIn: parent
                 visible: processIcon.status !== Image.Ready
                 text: "󰣆"
-                color: root.barForeground
+                color: root.panelForeground
                 font.family: root.bar ? root.bar.fontFamily : Style.font.family
                 font.pixelSize: Style.font.body
               }
@@ -394,7 +398,7 @@ Panel {
               text: Number(modelData.pid) > 0
                 ? modelData.name + "  ·  " + modelData.pid
                 : modelData.name
-              color: root.barForeground
+              color: root.panelForeground
               font.family: root.bar ? root.bar.fontFamily : Style.font.family
               font.pixelSize: Style.font.body
               elide: Text.ElideRight
@@ -406,7 +410,7 @@ Panel {
               anchors.verticalCenter: parent.verticalCenter
               width: Style.space(96)
               text: root.formatRate(modelData.downloadBytesPerSecond)
-              color: root.barForeground
+              color: root.panelForeground
               font.family: root.bar ? root.bar.fontFamily : Style.font.family
               font.pixelSize: Style.font.body
               font.bold: true
@@ -419,7 +423,7 @@ Panel {
               anchors.verticalCenter: parent.verticalCenter
               width: Style.space(96)
               text: root.formatRate(modelData.uploadBytesPerSecond)
-              color: root.barForeground
+              color: root.panelForeground
               font.family: root.bar ? root.bar.fontFamily : Style.font.family
               font.pixelSize: Style.font.body
               font.bold: true
@@ -431,14 +435,14 @@ Panel {
         Rectangle {
           width: parent.width
           height: Math.max(1, Style.space(1))
-          color: root.barForeground
+          color: root.panelForeground
           opacity: 0.12
         }
 
         Text {
           width: parent.width
           text: "Recent " + root.processRosterSize + " processes + unassigned traffic · R to refresh"
-          color: Qt.darker(root.barForeground, 1.5)
+          color: Qt.darker(root.panelForeground, 1.5)
           font.family: root.bar ? root.bar.fontFamily : Style.font.family
           font.pixelSize: Style.font.caption
           horizontalAlignment: Text.AlignHCenter
