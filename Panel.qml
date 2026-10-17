@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Commons
+import qs.Commons as Commons
 import qs.Ui
 
 Panel {
@@ -276,7 +277,7 @@ Panel {
             width: Style.space(7)
             height: width
             radius: width / 2
-            color: Color.accent
+            color: Commons.Color.accent
             opacity: root.processLoading ? 0.45 : 0.9
 
             SequentialAnimation on opacity {
